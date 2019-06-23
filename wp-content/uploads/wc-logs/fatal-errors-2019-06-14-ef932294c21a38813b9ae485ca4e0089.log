@@ -1,0 +1,4 @@
+2019-06-14T17:28:42+00:00 CRITICAL Maximum execution time of 120 seconds exceeded in C:\wamp64\www\store\wp-content\plugins\woocommerce\includes\api\v1\class-wc-rest-customer-downloads-controller.php on line 13
+
+2019-06-14T17:28:43+00:00 CRITICAL Maximum execution time of 120 seconds exceeded in C:\wamp64\www\store\wp-content\plugins\woocommerce\includes\api\v2\class-wc-rest-product-variations-v2-controller.php on line 11
+

@@ -1,0 +1,24 @@
+2019-06-21T16:01:25+00:00 CRITICAL Uncaught Error: Call to a member function request() on null in E:\xampp\htdocs\kankunsa_store\wp-content\plugins\wooxero\wooxero.php:145
+Stack trace:
+#0 E:\xampp\htdocs\kankunsa_store\wp-includes\class-wp-hook.php(286): initiate_order('')
+#1 E:\xampp\htdocs\kankunsa_store\wp-includes\class-wp-hook.php(310): WP_Hook->apply_filters('', Array)
+#2 E:\xampp\htdocs\kankunsa_store\wp-includes\plugin.php(465): WP_Hook->do_action(Array)
+#3 E:\xampp\htdocs\kankunsa_store\wp-content\plugins\woocommerce\includes\class-wc-checkout.php(1085): do_action('woocommerce_bef...')
+#4 E:\xampp\htdocs\kankunsa_store\wp-content\plugins\woocommerce\includes\class-wc-ajax.php(462): WC_Checkout->process_checkout()
+#5 E:\xampp\htdocs\kankunsa_store\wp-includes\class-wp-hook.php(286): WC_AJAX::checkout('')
+#6 E:\xampp\htdocs\kankunsa_store\wp-includes\class-wp-hook.php(310): WP_Hook->apply_filters('', Array)
+#7 E:\xampp\htdocs\kankunsa_store\wp-includes\plugin.php(465): WP_Hook->do_action(Array)
+#8 E:\xampp\htdocs\kankunsa_store\wp-conte in E:\xampp\htdocs\kankunsa_store\wp-content\plugins\wooxero\wooxero.php on line 145
+
+2019-06-21T16:01:39+00:00 CRITICAL Uncaught Error: Call to a member function request() on null in E:\xampp\htdocs\kankunsa_store\wp-content\plugins\wooxero\wooxero.php:145
+Stack trace:
+#0 E:\xampp\htdocs\kankunsa_store\wp-includes\class-wp-hook.php(286): initiate_order('')
+#1 E:\xampp\htdocs\kankunsa_store\wp-includes\class-wp-hook.php(310): WP_Hook->apply_filters('', Array)
+#2 E:\xampp\htdocs\kankunsa_store\wp-includes\plugin.php(465): WP_Hook->do_action(Array)
+#3 E:\xampp\htdocs\kankunsa_store\wp-content\plugins\woocommerce\includes\class-wc-checkout.php(1085): do_action('woocommerce_bef...')
+#4 E:\xampp\htdocs\kankunsa_store\wp-content\plugins\woocommerce\includes\class-wc-ajax.php(462): WC_Checkout->process_checkout()
+#5 E:\xampp\htdocs\kankunsa_store\wp-includes\class-wp-hook.php(286): WC_AJAX::checkout('')
+#6 E:\xampp\htdocs\kankunsa_store\wp-includes\class-wp-hook.php(310): WP_Hook->apply_filters('', Array)
+#7 E:\xampp\htdocs\kankunsa_store\wp-includes\plugin.php(465): WP_Hook->do_action(Array)
+#8 E:\xampp\htdocs\kankunsa_store\wp-conte in E:\xampp\htdocs\kankunsa_store\wp-content\plugins\wooxero\wooxero.php on line 145
+

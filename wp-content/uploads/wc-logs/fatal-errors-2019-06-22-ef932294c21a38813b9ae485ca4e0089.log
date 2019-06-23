@@ -1,0 +1,62 @@
+2019-06-22T03:51:45+00:00 CRITICAL Maximum execution time of 30 seconds exceeded in E:\xampp\htdocs\kankunsa_store\wp-includes\Requests\Transport\cURL.php on line 441
+
+2019-06-22T06:18:21+00:00 CRITICAL Uncaught Error: Call to a member function get_user_id() on null in E:\xampp\htdocs\kankunsa_store\wp-content\plugins\wooxero\wooxero.php:121
+Stack trace:
+#0 E:\xampp\htdocs\kankunsa_store\wp-includes\class-wp-hook.php(286): initiate_order('')
+#1 E:\xampp\htdocs\kankunsa_store\wp-includes\class-wp-hook.php(310): WP_Hook->apply_filters('', Array)
+#2 E:\xampp\htdocs\kankunsa_store\wp-includes\plugin.php(465): WP_Hook->do_action(Array)
+#3 E:\xampp\htdocs\kankunsa_store\wp-content\plugins\woocommerce\includes\class-wc-checkout.php(1085): do_action('woocommerce_bef...')
+#4 E:\xampp\htdocs\kankunsa_store\wp-content\plugins\woocommerce\includes\class-wc-ajax.php(462): WC_Checkout->process_checkout()
+#5 E:\xampp\htdocs\kankunsa_store\wp-includes\class-wp-hook.php(286): WC_AJAX::checkout('')
+#6 E:\xampp\htdocs\kankunsa_store\wp-includes\class-wp-hook.php(310): WP_Hook->apply_filters('', Array)
+#7 E:\xampp\htdocs\kankunsa_store\wp-includes\plugin.php(465): WP_Hook->do_action(Array)
+#8 E:\xampp\htdocs\kankunsa_store\wp-c in E:\xampp\htdocs\kankunsa_store\wp-content\plugins\wooxero\wooxero.php on line 121
+
+2019-06-22T06:18:35+00:00 CRITICAL Uncaught Error: Call to a member function get_user_id() on null in E:\xampp\htdocs\kankunsa_store\wp-content\plugins\wooxero\wooxero.php:121
+Stack trace:
+#0 E:\xampp\htdocs\kankunsa_store\wp-includes\class-wp-hook.php(286): initiate_order('')
+#1 E:\xampp\htdocs\kankunsa_store\wp-includes\class-wp-hook.php(310): WP_Hook->apply_filters('', Array)
+#2 E:\xampp\htdocs\kankunsa_store\wp-includes\plugin.php(465): WP_Hook->do_action(Array)
+#3 E:\xampp\htdocs\kankunsa_store\wp-content\plugins\woocommerce\includes\class-wc-checkout.php(1085): do_action('woocommerce_bef...')
+#4 E:\xampp\htdocs\kankunsa_store\wp-content\plugins\woocommerce\includes\class-wc-ajax.php(462): WC_Checkout->process_checkout()
+#5 E:\xampp\htdocs\kankunsa_store\wp-includes\class-wp-hook.php(286): WC_AJAX::checkout('')
+#6 E:\xampp\htdocs\kankunsa_store\wp-includes\class-wp-hook.php(310): WP_Hook->apply_filters('', Array)
+#7 E:\xampp\htdocs\kankunsa_store\wp-includes\plugin.php(465): WP_Hook->do_action(Array)
+#8 E:\xampp\htdocs\kankunsa_store\wp-c in E:\xampp\htdocs\kankunsa_store\wp-content\plugins\wooxero\wooxero.php on line 121
+
+2019-06-22T06:19:14+00:00 CRITICAL Uncaught Error: Call to a member function get_user_id() on bool in E:\xampp\htdocs\kankunsa_store\wp-content\plugins\wooxero\wooxero.php:126
+Stack trace:
+#0 E:\xampp\htdocs\kankunsa_store\wp-includes\class-wp-hook.php(286): initiate_order('')
+#1 E:\xampp\htdocs\kankunsa_store\wp-includes\class-wp-hook.php(310): WP_Hook->apply_filters('', Array)
+#2 E:\xampp\htdocs\kankunsa_store\wp-includes\plugin.php(465): WP_Hook->do_action(Array)
+#3 E:\xampp\htdocs\kankunsa_store\wp-content\plugins\woocommerce\includes\class-wc-checkout.php(1085): do_action('woocommerce_bef...')
+#4 E:\xampp\htdocs\kankunsa_store\wp-content\plugins\woocommerce\includes\class-wc-ajax.php(462): WC_Checkout->process_checkout()
+#5 E:\xampp\htdocs\kankunsa_store\wp-includes\class-wp-hook.php(286): WC_AJAX::checkout('')
+#6 E:\xampp\htdocs\kankunsa_store\wp-includes\class-wp-hook.php(310): WP_Hook->apply_filters('', Array)
+#7 E:\xampp\htdocs\kankunsa_store\wp-includes\plugin.php(465): WP_Hook->do_action(Array)
+#8 E:\xampp\htdocs\kankunsa_store\wp-c in E:\xampp\htdocs\kankunsa_store\wp-content\plugins\wooxero\wooxero.php on line 126
+
+2019-06-22T06:19:33+00:00 CRITICAL Uncaught Error: Call to a member function get_user_id() on bool in E:\xampp\htdocs\kankunsa_store\wp-content\plugins\wooxero\wooxero.php:126
+Stack trace:
+#0 E:\xampp\htdocs\kankunsa_store\wp-includes\class-wp-hook.php(286): initiate_order('')
+#1 E:\xampp\htdocs\kankunsa_store\wp-includes\class-wp-hook.php(310): WP_Hook->apply_filters('', Array)
+#2 E:\xampp\htdocs\kankunsa_store\wp-includes\plugin.php(465): WP_Hook->do_action(Array)
+#3 E:\xampp\htdocs\kankunsa_store\wp-content\plugins\woocommerce\includes\class-wc-checkout.php(1085): do_action('woocommerce_bef...')
+#4 E:\xampp\htdocs\kankunsa_store\wp-content\plugins\woocommerce\includes\class-wc-ajax.php(462): WC_Checkout->process_checkout()
+#5 E:\xampp\htdocs\kankunsa_store\wp-includes\class-wp-hook.php(286): WC_AJAX::checkout('')
+#6 E:\xampp\htdocs\kankunsa_store\wp-includes\class-wp-hook.php(310): WP_Hook->apply_filters('', Array)
+#7 E:\xampp\htdocs\kankunsa_store\wp-includes\plugin.php(465): WP_Hook->do_action(Array)
+#8 E:\xampp\htdocs\kankunsa_store\wp-c in E:\xampp\htdocs\kankunsa_store\wp-content\plugins\wooxero\wooxero.php on line 126
+
+2019-06-22T14:08:10+00:00 CRITICAL Object of class WP_User could not be converted to string in E:\xampp\htdocs\kankunsa_store\wp-content\plugins\wooxero\wooxero.php on line 152
+
+2019-06-22T14:19:34+00:00 CRITICAL Uncaught Error: Cannot use object of type WC_Order as array in E:\xampp\htdocs\kankunsa_store\wp-content\plugins\wooxero\wooxero.php:140
+Stack trace:
+#0 E:\xampp\htdocs\kankunsa_store\wp-includes\class-wp-hook.php(286): order_compler(2805)
+#1 E:\xampp\htdocs\kankunsa_store\wp-includes\class-wp-hook.php(310): WP_Hook->apply_filters(NULL, Array)
+#2 E:\xampp\htdocs\kankunsa_store\wp-includes\plugin.php(465): WP_Hook->do_action(Array)
+#3 E:\xampp\htdocs\kankunsa_store\wp-content\plugins\woocommerce\templates\checkout\thankyou.php(78): do_action('woocommerce_tha...', 2805)
+#4 E:\xampp\htdocs\kankunsa_store\wp-content\plugins\woocommerce\includes\wc-core-functions.php(249): include('E:\\xampp\\htdocs...')
+#5 E:\xampp\htdocs\kankunsa_store\wp-content\plugins\woocommerce\includes\shortcodes\class-wc-shortcode-checkout.php(248): wc_get_template('checkout/thanky...', Array)
+#6 E:\xampp\htdocs\kankunsa_store\wp-content\plugins\woocommerce\includes\shortcodes\class-wc-shortcode-checkout.php(63): WC_Shortcode_Checkout::or in E:\xampp\htdocs\kankunsa_store\wp-content\plugins\wooxero\wooxero.php on line 140
+
