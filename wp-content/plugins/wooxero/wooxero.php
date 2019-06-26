@@ -251,6 +251,7 @@ function order_compler( $order_id ) {
             </Contact>
             <Date>".$order_date_created."</Date>
             <DueDate>".$order_date_created."</DueDate>
+            <Status>AUTHORISED</Status>
             <LineAmountTypes>Exclusive</LineAmountTypes>
             <LineItems>";
 
@@ -327,102 +328,131 @@ function order_compler( $order_id ) {
         $paymentTerm = get_user_meta( $customer_id, 'payment_term', true );
         $xeroCustomerId = get_user_meta( $customer_id, 'xero_customer_id', true );
 
-        if($xeroCustomerId == ''){
-            
-        }
-           
-        #Get Order Data
-        $order_data = $order->get_data(); // The Order data
-        //$order_date_created = $order_data['date_created']->date('Y-m-d H:i:s');
-        $order_date_created = $order_data['date_created']->date('Y-m-d');
+        if($xeroCustomerId != ''){
+            #Get Order Data
+            $order_data = $order->get_data(); // The Order data
+            //$order_date_created = $order_data['date_created']->date('Y-m-d H:i:s');
+            $order_date_created = $order_data['date_created']->date('Y-m-d');
 
-        //echo date('Y-m-d', strtotime($Date. ' + 1 days'));
+            //echo date('Y-m-d', strtotime($Date. ' + 1 days'));
 
-        if($paymentTerm != ''){
-            $order_due_date = date('Y-m-d', strtotime($order_date_created. " + $paymentTerm days"));
-        }else{
-            $order_due_date = $order_date_created;
-        }
-
-        #Invoice XML here
-        $xml = "<Invoices>
-                    <Invoice>
-                    <Type>ACCREC</Type>
-                    <Contact>
-                        <ContactID>".$xeroCustomerId."</ContactID>
-                    </Contact>
-                    <Date>".$order_date_created."</Date>
-                    <DueDate>".$order_date_created."</DueDate>
-                    <LineAmountTypes>Exclusive</LineAmountTypes>
-                    <LineItems>";
-
-
-        foreach ( $order->get_items() as $item_id => $item ) {
-
-            //echo "<prE>"; print($item); echo "</pre>";
-
-            if( $item['variation_id'] > 0 ){
-                $product_id = $item['variation_id']; // variable product
-            } else {
-                $product_id = $item['product_id']; // simple product
+            if($paymentTerm != ''){
+                $order_due_date = date('Y-m-d', strtotime($order_date_created. " + $paymentTerm days"));
+            }else{
+                $order_due_date = $order_date_created;
             }
 
-            // Get the product object
-            $product = wc_get_product( $product_id );
+            #Invoice XML here
+            $xml = "<Invoices>
+                        <Invoice>
+                        <Type>ACCREC</Type>
+                        <Contact>
+                            <ContactID>".$xeroCustomerId."</ContactID>
+                        </Contact>
+                        <Date>".$order_date_created."</Date>
+                        <DueDate>".$order_date_created."</DueDate>
+                        <Status>AUTHORISED</Status>
+                        <LineAmountTypes>Exclusive</LineAmountTypes>
+                        <LineItems>";
 
-            // Get the product name
-            $product_name = $item['name'];
-            // Get the product price
-            $product_price = $product->get_price();
-            // Get the item quantity
-            $item_quantity = $order->get_item_meta($item_id, '_qty', true);
-            // Get the item line total
-            $item_total = $order->get_item_meta($item_id, '_line_total', true);
 
-            // Displaying this data (to check)                
-            //echo '<br> Product name: '.$product_name.' | Quantity: '.$item_quantity.' | Price: '.$product_price.' | Item total: '. $item_total;
+            foreach ( $order->get_items() as $item_id => $item ) {
+
+                //echo "<prE>"; print($item); echo "</pre>";
+
+                if( $item['variation_id'] > 0 ){
+                    $product_id = $item['variation_id']; // variable product
+                } else {
+                    $product_id = $item['product_id']; // simple product
+                }
+
+                // Get the product object
+                $product = wc_get_product( $product_id );
+
+                // Get the product name
+                $product_name = $item['name'];
+                // Get the product price
+                $product_price = $product->get_price();
+                // Get the item quantity
+                $item_quantity = $order->get_item_meta($item_id, '_qty', true);
+                // Get the item line total
+                $item_total = $order->get_item_meta($item_id, '_line_total', true);
+
+                // Displaying this data (to check)                
+                //echo '<br> Product name: '.$product_name.' | Quantity: '.$item_quantity.' | Price: '.$product_price.' | Item total: '. $item_total;
+
+                $xml .= "<LineItem>
+                    <Description>".$product_name."</Description>
+                    <Quantity>".$item_quantity."</Quantity>
+                    <UnitAmount>".$product_price."</UnitAmount>  
+                    <AccountCode>200</AccountCode>                  
+                    </LineItem>";
+            }
+
+            // Add shipping item into xero invocie
+            $shipping_total = $order->get_shipping_total(); 
+            $shipping_tax   = $order->get_shipping_tax(); 
 
             $xml .= "<LineItem>
-                <Description>".$product_name."</Description>
-                <Quantity>".$item_quantity."</Quantity>
-                <UnitAmount>".$product_price."</UnitAmount>  
-                <AccountCode>200</AccountCode>                  
+                <Description>Shipping charge</Description>
+                <Quantity>1</Quantity>
+                <UnitAmount>".($shipping_total+$shipping_tax)."</UnitAmount>
+                <AccountCode>200</AccountCode>                    
                 </LineItem>";
-        }
-
-        // Add shipping item into xero invocie
-        $shipping_total = $order->get_shipping_total(); 
-        $shipping_tax   = $order->get_shipping_tax(); 
-
-        $xml .= "<LineItem>
-            <Description>Shipping charge</Description>
-            <Quantity>1</Quantity>
-            <UnitAmount>".($shipping_total+$shipping_tax)."</UnitAmount>
-            <AccountCode>200</AccountCode>                    
-            </LineItem>";
 
 
-        $xml .= "</LineItems>
-        </Invoice>
-        </Invoices>";
+            $xml .= "</LineItems>
+            </Invoice>
+            </Invoices>";
 
-        try{
-            # Create Xero Invocie
-            $response = $XeroOAuth->request('POST', $XeroOAuth->url('Invoices', 'core'), array(), $xml);
-            if ($XeroOAuth->response['code'] == 200) {
-                $invoice = $XeroOAuth->parseResponse($XeroOAuth->response['response'], $XeroOAuth->response['format']);
-                if (count($invoice->Invoices[0])>0) {
-                    // echo "The first one is: </br>";
-                    // pr($invoice->Invoices[0]->Invoice);
+            try{
+                # Create Xero Invocie
+                $response = $XeroOAuth->request('POST', $XeroOAuth->url('Invoices', 'core'), array(), $xml);
+                if ($XeroOAuth->response['code'] == 200) {
+                    $invoice = $XeroOAuth->parseResponse($XeroOAuth->response['response'], $XeroOAuth->response['format']);
+                    if (count($invoice->Invoices[0])>0) {
+                        // echo "The first one is: </br>";
+                        // pr($invoice->Invoices[0]->Invoice);
+                        $invoiceId = $invoice->Invoices[0]->Invoice->InvoiceID;
+                        $invoiceAmt = $invoice->Invoices[0]->Invoice->AmountDue;
+
+                        // <Date>".$order_date_created."T".date('h:i:s')."</Date>
+                        // Add payment to invocie
+                        $paymentxml = "<Payments>
+                                  <Payment>
+                                    <Invoice>
+                                      <InvoiceID>".$invoiceId."</InvoiceID>
+                                    </Invoice>
+                                    <Account>
+                                      <AccountID>562555F2-8CDE-4CE9-8203-0363922537A4</AccountID>
+                                    </Account>
+                                    <Date>2019-06-26</Date>
+                                    <Amount>".$invoiceAmt."</Amount>
+                                  </Payment>
+                                </Payments>";
+
+
+                        $response = $XeroOAuth->request('PUT', $XeroOAuth->url('payments', 'core'), array(), $paymentxml);
+                        if ($XeroOAuth->response['code'] == 200) {
+                            $payments = $XeroOAuth->parseResponse($XeroOAuth->response['response'], $XeroOAuth->response['format']);
+                            //pr($payments->Payments[0]->Payment);
+                            //die('------');
+                        } else {
+                            outputError($XeroOAuth);
+                        }
+
+                    }
+                } else {
+                    // Xero Error handing here
                 }
-            } else {
-                // Xero Error handing here
+            }
+            catch (\Exception $ex) {
+                // Other exception handling here
+                echo $ex->getMessage();
             }
         }
-        catch (\Exception $ex) {
-            // Other exception handling here
-            echo $ex->getMessage();
-        }
+           
+        
     }
    
 }
