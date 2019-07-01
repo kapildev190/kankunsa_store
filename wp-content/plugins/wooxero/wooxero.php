@@ -8,15 +8,16 @@
  * Author URI: https://wooxero.com
  * Text Domain: wooxero
  * Domain Path: /i18n/languages/
- *
+ * Developer: Kapil dharnia 
+ * 
  * @package WooXero
  */
 
-/*
+
 ini_set('display_errors', 1);
 ini_set('display_startup_errors', 1);
 error_reporting(E_ALL);
-*/
+
 
 
 add_action( 'user_new_form', 'crf_admin_registration_form' );
@@ -118,7 +119,6 @@ function crf_user_profile_update_errors( $errors, $update, $user ) {
 
 
 add_action( 'user_register', 'crf_add_profile_fields', 10, 1 );
-
 function crf_add_profile_fields( $user_id ) {    
 
     if ( ! empty( $_POST['payment_term'] ) ) {
@@ -471,6 +471,9 @@ function xero_integration() {
         $order_id = wc_get_order_id_by_order_key($_GET['key']);
         $order = wc_get_order($order_id);
 
+
+        $adminEmail = get_bloginfo('admin_email');
+
         // Add invocie id meta data
         if ( ! add_post_meta( $order_id, 'xeroInvocieId', '', true ) ) { 
 
@@ -481,6 +484,7 @@ function xero_integration() {
         $customer_id = get_current_user_id();
 
         if($customer_id == 0){
+
             // If non register user place order then create customer at xero             
             $cus_first_name = $order->get_billing_first_name();
             $cus_last_name = $order->get_billing_last_name();
@@ -679,7 +683,7 @@ function xero_integration() {
 
 
 
-                #Get order meta data
+                #Get order meta data. To avoid xero duplicate invocie
                 $orderXeroMeta = wc_get_order_item_meta($order_id, 'xeroInvocieId', true); 
                 if($orderXeroMeta == ''){
                     try{
@@ -690,9 +694,8 @@ function xero_integration() {
                             if (count($invoice->Invoices[0])>0) {
                                 // echo "The first one is: </br>";
                                 // pr($invoice->Invoices[0]->Invoice);
-                                $invoiceId = $invoice->Invoices[0]->Invoice->InvoiceID;
+                                $invoiceId = (string)$invoice->Invoices[0]->Invoice->InvoiceID;
                                 $invoiceAmt = $invoice->Invoices[0]->Invoice->AmountDue;
-
 
                                 update_post_meta ( $order_id, 'xeroInvocieId', $invoiceId );
 
@@ -706,7 +709,7 @@ function xero_integration() {
                                             <Account>
                                               <AccountID>562555F2-8CDE-4CE9-8203-0363922537A4</AccountID>
                                             </Account>
-                                            <Date>2019-06-26</Date>
+                                            <Date>2019-06-01</Date>
                                             <Amount>".$invoiceAmt."</Amount>
                                           </Payment>
                                         </Payments>";
@@ -717,11 +720,11 @@ function xero_integration() {
                                     $payments = $XeroOAuth->parseResponse($XeroOAuth->response['response'], $XeroOAuth->response['format']);
                                     
                                     # send mail
-                                    $to = "steve.jobs@apple.com";
-                                    $subject = "Apple Computer";
-                                    $message = "Steve, I think this computer thing might really take off.";
-                                    wp_mail( $to, $subject, $message );
-
+                                    // $to = $adminEmail;
+                                    // $subject = "Xero Invoice ";
+                                    // $message = "Steve, I think this computer thing might really take off.";
+                                    // wp_mail( $to, $subject, $message );
+                                    
 
                                 } else {
                                     outputError($XeroOAuth);
