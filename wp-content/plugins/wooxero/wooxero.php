@@ -312,7 +312,18 @@ function order_compler( $order_id ) {
             $xeroInvoiceAccountCode = get_user_meta( $customer_id, 'xero_invoice_account_code', true );
 
             if($xeroInvoiceAccountCode == ''){
-                $xeroInvoiceAccountCode = 200;
+                $xeroInvoiceAccountCode = 200; //Set default account 200
+            }else{
+                # Check Account code exist or not
+                $response = $XeroOAuth->request('GET', $XeroOAuth->url('Accounts', 'core'), array('Where' => 'Code=="$xeroInvoiceAccountCode"'));
+                if ($XeroOAuth->response['code'] == 200) {
+                    $accounts = $XeroOAuth->parseResponse($XeroOAuth->response['response'], $XeroOAuth->response['format']);
+                    if(isset($accounts->Accounts[0])){
+                        $xeroInvoiceAccountCode = 200; //Set default account 200
+                    }
+                }else{
+                    $xeroInvoiceAccountCode = 200; //Set default account 200                    
+                }
             }
 
             if($xeroCustomerId == ''){
@@ -341,6 +352,9 @@ function order_compler( $order_id ) {
                     //outputError($XeroOAuth);
                     //echo "<pre>";print_r($XeroOAuth->response['response']);
                 }
+
+
+
             }
             #Get Order Data
             $order_data = $order->get_data(); // The Order data
@@ -417,7 +431,6 @@ function order_compler( $order_id ) {
                 # Create Xero Invocie
                 $response = $XeroOAuth->request('POST', $XeroOAuth->url('Invoices', 'core'), array(), $xml);
                 if ($XeroOAuth->response['code'] == 200) {
-                     echo "<prE>"; print_r($XeroOAuth->response['response']); die('-----------');
                     $invoice = $XeroOAuth->parseResponse($XeroOAuth->response['response'], $XeroOAuth->response['format']);
                     if (count($invoice->Invoices[0])>0) {
                         // echo "The first one is: </br>";
@@ -437,31 +450,22 @@ function order_compler( $order_id ) {
                             <Account>
                             <AccountID>562555F2-8CDE-4CE9-8203-0363922537A4</AccountID>
                             </Account>
-                            <Date>2019-06-01</Date>
+                            <Date>".date('Y-m-d')."</Date>
                             <Amount>".$invoiceAmt."</Amount>
                             </Payment>
                             </Payments>";
 
-
                         $response = $XeroOAuth->request('PUT', $XeroOAuth->url('payments', 'core'), array(), $paymentxml);
                         if ($XeroOAuth->response['code'] == 200) {
                             $payments = $XeroOAuth->parseResponse($XeroOAuth->response['response'], $XeroOAuth->response['format']);
-                            
-                            # send mail
-                            // $to = $adminEmail;
-                            // $subject = "Xero Invoice ";
-                            // $message = "Steve, I think this computer thing might really take off.";
-                            // wp_mail( $to, $subject, $message );
-                            
-
+                                                        
                         } else {
                             //outputError($XeroOAuth);
                         }
                     }
                 } else {
                     // Xero Error handing here
-                    // outputError($XeroOAuth);
-                    echo "<prE>"; print_r($XeroOAuth->response); die('sada');
+                    // outputError($XeroOAuth);                    
                 }
             }  
         } 
