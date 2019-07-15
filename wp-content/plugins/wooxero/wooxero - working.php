@@ -67,7 +67,6 @@ add_action( 'edit_user_profile', 'crf_show_extra_profile_fields' );
 function crf_show_extra_profile_fields( $user ) {
     $paymentTerm = get_the_author_meta( 'payment_term', $user->ID );
     $xeroCustomerId = get_the_author_meta( 'xero_customer_id', $user->ID );
-    $xeroInvoiceAccountCode = get_the_author_meta( 'xero_invoice_account_code', $user->ID );
     ?>
     <h3><?php esc_html_e( 'Xero Custom Field', 'crf' ); ?></h3>
 
@@ -94,17 +93,6 @@ function crf_show_extra_profile_fields( $user ) {
                 />
             </td>
         </tr>
-         <tr>
-            <th><label for="xero_customer_id"><?php esc_html_e( 'Xero Invoice Account Code', 'crf' ); ?></label></th>
-            <td>
-                <input type="text"                   
-                   id="xero_invoice_account_code"
-                   name="xero_invoice_account_code"
-                   value="<?php echo esc_attr( $xeroInvoiceAccountCode ); ?>"
-                   class="regular-text"
-                />
-            </td>
-        </tr>
     </table>
     <?php
 }
@@ -126,11 +114,8 @@ function crf_user_profile_update_errors( $errors, $update, $user ) {
     if ( empty( $_POST['xero_customer_id'] ) ) {
         $errors->add( 'xero_customer_id_error', __( '<strong>ERROR</strong>: Please enter your Xero customer id.', 'crf' ) );
     }
-
-    if ( empty( $_POST['xero_invoice_account_code'] ) ) {
-        $errors->add( 'xero_invoice_account_code_error', __( '<strong>ERROR</strong>: Please enter your Xero Invoice Account Code.', 'crf' ) );
-    }
 }
+
 
 
 add_action( 'user_register', 'crf_add_profile_fields', 10, 1 );
@@ -146,13 +131,8 @@ function crf_add_profile_fields( $user_id ) {
 
         add_user_meta( $user_id, 'xero_customer_id',  $_POST['xero_customer_id']  );
         
-    }
+    }     
 
-    if ( ! empty( $_POST['xero_invoice_account_code'] ) ) {
-
-        add_user_meta( $user_id, 'xero_invoice_account_code',  $_POST['xero_invoice_account_code']  );
-        
-    }      
 }
 
 add_action( 'personal_options_update', 'crf_update_profile_fields' );
@@ -175,17 +155,11 @@ function crf_update_profile_fields( $user_id ) {
         update_user_meta( $user_id, 'xero_customer_id', $_POST['xero_customer_id'] );
         
     }
-
-    if ( ! empty( $_POST['xero_invoice_account_code'] ) ) {
-       
-        update_user_meta( $user_id, 'xero_invoice_account_code', $_POST['xero_invoice_account_code'] );
-        
-    }
 }
 
 
 add_action('woocommerce_thankyou', 'order_compler', 10, 1);
-function order_compler( $order_id ) { 
+function order_compler( $order_id ) {
     // Do stuff. Say we will echo "Fired on the WordPress initialization".    
     try{
         $order = wc_get_order($order_id);
@@ -309,12 +283,6 @@ function order_compler( $order_id ) {
             //echo $customer_id;
             $paymentTerm = get_user_meta( $customer_id, 'payment_term', true );
             $xeroCustomerId = get_user_meta( $customer_id, 'xero_customer_id', true );
-            $xeroInvoiceAccountCode = get_user_meta( $customer_id, 'xero_invoice_account_code', true );
-
-            if($xeroInvoiceAccountCode == ''){
-                $xeroInvoiceAccountCode = 200;
-            }
-
             if($xeroCustomerId == ''){
                 // If non register user place order then create customer at xero             
                 $cus_first_name = $order->get_billing_first_name();
@@ -392,7 +360,7 @@ function order_compler( $order_id ) {
                     <Description>".$product_name."</Description>
                     <Quantity>".$item_quantity."</Quantity>
                     <UnitAmount>".$product_price."</UnitAmount>  
-                    <AccountCode>".$xeroInvoiceAccountCode."</AccountCode>                  
+                    <AccountCode>200</AccountCode>                  
                     </LineItem>";
             }
 
@@ -404,7 +372,7 @@ function order_compler( $order_id ) {
                 <Description>Shipping charge</Description>
                 <Quantity>1</Quantity>
                 <UnitAmount>".($shipping_total+$shipping_tax)."</UnitAmount>
-                <AccountCode>".$xeroInvoiceAccountCode."</AccountCode>                    
+                <AccountCode>200</AccountCode>                    
                 </LineItem>";
 
             $xml .= "</LineItems>
@@ -417,7 +385,6 @@ function order_compler( $order_id ) {
                 # Create Xero Invocie
                 $response = $XeroOAuth->request('POST', $XeroOAuth->url('Invoices', 'core'), array(), $xml);
                 if ($XeroOAuth->response['code'] == 200) {
-                     echo "<prE>"; print_r($XeroOAuth->response['response']); die('-----------');
                     $invoice = $XeroOAuth->parseResponse($XeroOAuth->response['response'], $XeroOAuth->response['format']);
                     if (count($invoice->Invoices[0])>0) {
                         // echo "The first one is: </br>";
@@ -460,8 +427,6 @@ function order_compler( $order_id ) {
                     }
                 } else {
                     // Xero Error handing here
-                    // outputError($XeroOAuth);
-                    echo "<prE>"; print_r($XeroOAuth->response); die('sada');
                 }
             }  
         } 
